@@ -99,7 +99,7 @@ export default function ({
 
   console.log(from.version, to.version);
   if (from && from.version) {
-    versionChange = semverDiff(from.version.replace("^"), to.version);
+    versionChange = semverDiff(from.version, to.version);
   }
   console.log(versionChange);
 
