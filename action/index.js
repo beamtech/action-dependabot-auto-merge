@@ -7,6 +7,7 @@ import github from '@actions/github'
 
 // modules
 import main from './lib/index.js'
+import { true } from 'tap'
 
   // exit early
 if (github.context.eventName !== 'pull_request') {
@@ -20,19 +21,26 @@ const { payload: { sender, pull_request, ...otherpayload } } = github.context //
 console.log(github.context)
 console.log(pull_request, pull_request.user)
 
-console.log('sender', sender)
-// exit early if PR is not by dependabot
-if (!sender || !['dependabot[bot]', 'dependabot-preview[bot]'].includes(sender.login)) {
-  core.warning(`expected PR by "dependabot[bot]", found "${sender ? sender.login : 'no-sender'}" instead`)
-  process.exit(0)
-}
-
 // parse inputs
 const inputs = {
   token: core.getInput('github-token', { required: true }),
   target: core.getInput('target', { required: false }),
+  usePrUser: core.getInput('usePrUser', { required: false }),
   command: core.getInput('command', { required: false }),
   approve: core.getInput('approve', { required: false })
+}
+
+console.log("sender", sender, usePrUser === true, usePrUser === "true");
+// exit early if PR is not by dependabot
+const { login } = usePrUser
+  ? (pull_request && pull_request.user) || {}
+  : sender;
+
+if (!["dependabot[bot]", "dependabot-preview[bot]"].includes(login)) {
+  core.warning(
+    `expected PR by "dependabot[bot]", found "${login || "no-sender"}" instead`
+  );
+  process.exit(0);
 }
 
 // error handler
