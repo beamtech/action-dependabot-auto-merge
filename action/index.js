@@ -17,9 +17,6 @@ if (github.context.eventName !== 'pull_request') {
 // extract the title
 const { payload: { sender, pull_request, ...otherpayload } } = github.context // eslint-disable-line camelcase
 
-console.log(github.context)
-console.log(pull_request, pull_request.user)
-
 // parse inputs
 const inputs = {
   token: core.getInput('github-token', { required: true }),
@@ -29,9 +26,9 @@ const inputs = {
   approve: core.getInput('approve', { required: false })
 }
 
-console.log("sender", sender, usePrUser === true, usePrUser === "true");
+console.log("sender", sender, inputs.usePrUser === true, inputs.usePrUser === "true");
 // exit early if PR is not by dependabot
-const { login } = usePrUser
+const { login } = inputs.usePrUser
   ? (pull_request && pull_request.user) || {}
   : sender;
 
