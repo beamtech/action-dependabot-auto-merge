@@ -7,7 +7,6 @@ import github from '@actions/github'
 
 // modules
 import main from './lib/index.js'
-import { true } from 'tap'
 
   // exit early
 if (github.context.eventName !== 'pull_request') {
